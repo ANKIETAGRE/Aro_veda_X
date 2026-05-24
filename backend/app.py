@@ -22,7 +22,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
 
-    CORS(app, origins=['http://localhost:3000', 'http://localhost:5173'])
+    CORS(app)
     db.init_app(app)
 
     app.register_blueprint(patient_bp)
