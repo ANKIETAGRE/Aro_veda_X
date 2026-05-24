@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
 
 const STATUS_BADGE = {
   Pending:'badge-pending', Approved:'badge-approved',

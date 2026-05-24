@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
 
 const TRAVEL_MODES = [
   { key: 'driving',   label: '🚗 Drive',  gmaps: 'driving'   },

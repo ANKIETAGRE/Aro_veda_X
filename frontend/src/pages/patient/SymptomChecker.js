@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
 
 export default function SymptomChecker() {
   const { patientId } = useApp();

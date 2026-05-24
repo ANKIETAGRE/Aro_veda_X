@@ -123,7 +123,7 @@ export default function FindDoctors() {
     setUploadingDoc(true);
     try {
       const axios = (await import('axios')).default;
-      const api   = axios.create({ baseURL: 'http://localhost:5000/api' });
+      const api   = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
       await api.put(`/patient/appointments/${bookedId}/upload-doc`, {
         doc_file_data: docFileData, doc_file_name: docFileName,
         doc_file_type: docFileType, doc_title: docTitle, patient_note: patientNote,

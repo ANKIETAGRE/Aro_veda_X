@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useApp } from '../../context/AppContext';
 import toast from 'react-hot-toast';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
 
 const DOC_TYPES = [
   { type: 'X-Ray',            icon: '🩻', category: 'Radiology',   color: '#1d3557' },
