@@ -56,6 +56,11 @@ def create_app():
             app.config['ML_MODEL'] = None
             app.config['ML_ENCODER'] = None
 
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        import traceback
+        return jsonify({'error': str(e), 'trace': traceback.format_exc()}), 500
+
     return app
 
 app = create_app()
