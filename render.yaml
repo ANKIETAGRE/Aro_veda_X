@@ -15,5 +15,4 @@ services:
 databases:
   - name: medical-app-db
     databaseName: medical_db
-    user: postgres
     plan: free
