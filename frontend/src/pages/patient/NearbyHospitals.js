@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-
-const API = axios.create({ baseURL: 'https://medical-app-backend-production-fdef.up.railway.app/api' });
+import { patientAPI } from '../../utils/api';
 
 const TYPE_COLORS = {
   'Government':      '#2d6a4f',
@@ -43,14 +41,22 @@ export default function NearbyHospitals() {
   const markersRef  = useRef([]);
   const userMarker  = useRef(null);
 
-  useEffect(() => { loadHospitals(); loadLeaflet(); detectLocation(); }, []);
+  useEffect(() => { loadLeaflet(); detectLocation(); }, []);
+  useEffect(() => { loadHospitals(userLocation); }, [userLocation]);
   useEffect(() => { applyFilters(); }, [hospitals, search, typeFilter, emergencyOnly]);
   useEffect(() => { if (mapLoaded && mapRef.current && !mapInstance.current) initMap(); }, [mapLoaded]);
   useEffect(() => { if (mapInstance.current && filtered.length > 0) updateMarkers(); }, [filtered, mapLoaded, selected]);
   useEffect(() => { placeUserMarker(); }, [userLocation, mapLoaded]);
 
-  const loadHospitals = async () => {
-    try { const r = await API.get('/hospitals/'); setHospitals(r.data); setFiltered(r.data); }
+  const loadHospitals = async (loc) => {
+    setLoading(true);
+    try { 
+      const r = loc 
+        ? await patientAPI.getNearbyHospitals(loc.lat, loc.lng, 15) // default radius 15km
+        : await patientAPI.getHospitals();
+      setHospitals(r.data); 
+      setFiltered(r.data); 
+    }
     catch {} finally { setLoading(false); }
   };
 

@@ -16,10 +16,14 @@ export const patientAPI = {
 
   getDoctors: (specialization_id) =>
     API.get(`/patient/doctors${specialization_id ? `?specialization_id=${specialization_id}` : ''}`),
+  listDoctors: (limit = 20) => API.get(`/doctor/list?limit=${limit}`),
   getSlots: (doctor_id, date) => API.get(`/patient/doctors/${doctor_id}/slots?date=${date}`),
 
   getSymptoms: () => API.get('/patient/symptoms'),
   predict: (data) => API.post('/patient/predict', data),
+
+  getHospitals: () => API.get('/hospitals/'),
+  getNearbyHospitals: (lat, lng, radius = 10) => API.get(`/hospitals/nearby?lat=${lat}&lng=${lng}&radius=${radius}`),
 
   getNotifications: (patient_id) => API.get(`/patient/notifications?patient_id=${patient_id}`),
   markRead: (id) => API.put(`/patient/notifications/${id}/read`),

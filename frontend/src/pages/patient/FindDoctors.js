@@ -54,7 +54,9 @@ export default function FindDoctors() {
     setLoading(true);
     try {
       const spec = specializations.find(s => s.name === selectedSpec);
-      const res  = await patientAPI.getDoctors(spec?.id);
+      const res = spec 
+        ? await patientAPI.getDoctors(spec.id) 
+        : await patientAPI.listDoctors(20);
       setDoctors(res.data);
     } catch { toast.error('Failed to load doctors'); }
     finally   { setLoading(false); }
