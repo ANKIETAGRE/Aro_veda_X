@@ -114,3 +114,39 @@ def get_nearby_hospitals():
     hospitals = Hospital.query.all()
     nearby = [h.to_dict() for h in hospitals if h.latitude is not None and h.longitude is not None and haversine(lat, lng, float(h.latitude), float(h.longitude)) <= radius]
     return jsonify(nearby)
+@hospital_bp.route('/seed', methods=['POST'])
+def seed_hospitals():
+    """Seed the database with sample hospitals in Jaipur."""
+    if Hospital.query.first():
+        return jsonify({'message': 'Hospitals already exist'}), 200
+
+    sample_hospitals = [
+        Hospital(
+            name='City Care Hospital', address='Malviya Nagar, Jaipur, Rajasthan', area='Malviya Nagar',
+            phone='0141-2345678', emergency_phone='102', hospital_type='General', specializations='General Medicine',
+            total_beds=150, latitude=26.8530, longitude=75.8047
+        ),
+        Hospital(
+            name='Apex Super Specialty', address='Mansarovar, Jaipur, Rajasthan', area='Mansarovar',
+            phone='0141-8765432', emergency_phone='112', hospital_type='Super Specialty', specializations='Cardiology, Neurology',
+            total_beds=300, latitude=26.8549, longitude=75.7634
+        ),
+        Hospital(
+            name='Fortis Escorts', address='JLN Marg, Jaipur, Rajasthan', area='JLN Marg',
+            phone='0141-9998888', emergency_phone='112', hospital_type='Private', specializations='Multi-specialty',
+            total_beds=250, latitude=26.8370, longitude=75.8055
+        ),
+        Hospital(
+            name='SMS Government Hospital', address='Tonk Road, Jaipur, Rajasthan', area='Tonk Road',
+            phone='0141-2223333', emergency_phone='102', hospital_type='Government', specializations='All',
+            total_beds=1000, latitude=26.8947, longitude=75.8071
+        ),
+        Hospital(
+            name='Vaishali Nursing Home', address='Vaishali Nagar, Jaipur, Rajasthan', area='Vaishali Nagar',
+            phone='0141-4445555', emergency_phone='102', hospital_type='Nursing Home', specializations='Maternity, Pediatrics',
+            total_beds=50, latitude=26.9260, longitude=75.7387
+        )
+    ]
+    db.session.add_all(sample_hospitals)
+    db.session.commit()
+    return jsonify({'message': 'Successfully seeded 5 hospitals'}), 201
