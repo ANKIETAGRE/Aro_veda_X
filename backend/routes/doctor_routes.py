@@ -238,3 +238,10 @@ def save_prescription(appointment_id):
     db.session.commit()
 
     return jsonify({'message': 'Prescription saved!', 'appointment': appt.to_dict()})
+
+@doctor_bp.route('/list', methods=['GET'])
+def list_doctors():
+    """Return a list of doctors, optionally limited to a number (default 20)."""
+    limit = request.args.get('limit', 20, type=int)
+    doctors = Doctor.query.limit(limit).all()
+    return jsonify([d.to_dict() for d in doctors])

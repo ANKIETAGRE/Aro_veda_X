@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.models import db
-
+import math
 hospital_bp = Blueprint('hospital', __name__, url_prefix='/api/hospitals')
 
 # ── Add Hospital model inline ────────────────────────────────────────
@@ -87,3 +87,30 @@ def get_types():
 def get_areas():
     areas = db.session.query(Hospital.area).distinct().order_by(Hospital.area).all()
     return jsonify([a[0] for a in areas if a[0]])
+
+@hospital_bp.route('/nearby', methods=['GET'])
+def get_nearby_hospitals():
+    """Return hospitals within a given radius (km) of a latitude/longitude point.
+    Query parameters:
+      - lat: latitude (required)
+      - lng: longitude (required)
+      - radius: search radius in km (optional, default 5 km)
+    """
+    try:
+        lat = float(request.args.get('lat'))
+        lng = float(request.args.get('lng'))
+        radius = float(request.args.get('radius', 5))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid or missing lat/lng/radius'}), 400
+
+    def haversine(lat1, lon1, lat2, lon2):
+        R = 6371  # Earth radius in km
+        phi1, phi2 = math.radians(lat1), math.radians(lat2)
+        dphi = math.radians(lat2 - lat1)
+        dlambda = math.radians(lon2 - lon1)
+        a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+        return 2 * R * math.asin(math.sqrt(a))
+
+    hospitals = Hospital.query.all()
+    nearby = [h.to_dict() for h in hospitals if h.latitude is not None and h.longitude is not None and haversine(lat, lng, float(h.latitude), float(h.longitude)) <= radius]
+    return jsonify(nearby)
