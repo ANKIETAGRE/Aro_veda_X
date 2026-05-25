@@ -76,3 +76,45 @@ def search_medicine():
         'medicine': medicine,
         'shops': [s.to_dict() for s in shops]
     })
+
+@chemist_bp.route('/seed', methods=['POST'])
+def seed_chemists():
+    """Seed the database with 5 sample chemist shops."""
+    if ChemistShop.query.first():
+        return jsonify({'message': 'Chemists already exist'}), 200
+
+    sample_chemists = [
+        ChemistShop(
+            name='Apollo Pharmacy', address='Malviya Nagar, Jaipur, Rajasthan', area='Malviya Nagar',
+            phone='0141-1112222', owner_name='Apollo Group', open_time='24/7', close_time='24/7',
+            is_24hrs=True, has_generic=True, has_ayurvedic=True, home_delivery=True,
+            latitude=26.8531, longitude=75.8048, rating=4.5
+        ),
+        ChemistShop(
+            name='Sanjeevani Medicos', address='Mansarovar, Jaipur, Rajasthan', area='Mansarovar',
+            phone='0141-3334444', owner_name='Ramesh Sharma', open_time='08:00 AM', close_time='10:00 PM',
+            is_24hrs=False, has_generic=True, has_ayurvedic=False, home_delivery=False,
+            latitude=26.8550, longitude=75.7635, rating=4.2
+        ),
+        ChemistShop(
+            name='Wellness Forever', address='C-Scheme, Jaipur, Rajasthan', area='C-Scheme',
+            phone='0141-5556666', owner_name='Wellness Inc', open_time='24/7', close_time='24/7',
+            is_24hrs=True, has_generic=True, has_ayurvedic=True, home_delivery=True,
+            latitude=26.9012, longitude=75.7995, rating=4.8
+        ),
+        ChemistShop(
+            name='Jan Aushadhi Kendra', address='Tonk Road, Jaipur, Rajasthan', area='Tonk Road',
+            phone='0141-7778888', owner_name='Govt of India', open_time='09:00 AM', close_time='08:00 PM',
+            is_24hrs=False, has_generic=True, has_ayurvedic=False, home_delivery=False,
+            latitude=26.8948, longitude=75.8072, rating=4.0
+        ),
+        ChemistShop(
+            name='Patanjali Arogya Kendra', address='Vaishali Nagar, Jaipur, Rajasthan', area='Vaishali Nagar',
+            phone='0141-9990000', owner_name='Ramdev Trust', open_time='07:00 AM', close_time='09:00 PM',
+            is_24hrs=False, has_generic=False, has_ayurvedic=True, home_delivery=True,
+            latitude=26.9261, longitude=75.7388, rating=4.3
+        )
+    ]
+    db.session.add_all(sample_chemists)
+    db.session.commit()
+    return jsonify({'message': 'Successfully seeded 5 chemists'}), 201
